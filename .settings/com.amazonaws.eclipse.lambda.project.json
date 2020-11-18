@@ -1,0 +1,1 @@
+{"lastDeploymentHandler":"com.julia.iteration_1.CreateChoiceLambda","lastInvokeHandler":null,"handlerMetadata":{"com.julia.iteration_1.CreateChoiceLambda":{"deployment":{"regionId":"us-east-2","awsLambdaFunctionName":"DeleteChoiceLambda","awsIamRoleName":"Developer","awsS3BucketName":"teamjuliabucket","memory":0,"timeout":0},"invoke":null}},"lastInvokedHandlerDeployed":false}
