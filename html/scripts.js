@@ -47,6 +47,7 @@ window.onload = function() {
   document.getElementById( "alternative_3" ).style.display = "none"
   document.getElementById( "alternative_4" ).style.display = "none"
   document.getElementById( "alternative_5" ).style.display = "none"
+  document.getElementById( "display" ).style.display = "none"
   
   const showParticipateButton = document.getElementById( 'showParticipateButton' )
   showParticipateButton.onclick = showParticipateForm
@@ -54,6 +55,5 @@ window.onload = function() {
   showCreateButton.onclick = showCreateForm
   const additionalAlternativeButton = document.getElementById( 'additionalAlternative' )
   additionalAlternativeButton.onclick = additionalAlternative
-
 }
 
