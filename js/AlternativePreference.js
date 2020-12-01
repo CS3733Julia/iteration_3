@@ -2,10 +2,8 @@
  * participating in a choice
  */
 function processParticipant(result, member) {
-	//console.log(result)
-	//console.log(result.description);
-	// WEbsite shows
-	//console.log(member);
+	console.log(result)
+	console.log(member);
 	document.getElementById( "display" ).style.display = "block"
 	document.getElementById("display_choiceDescription").innerHTML = result["description"];
 	document.getElementById("date_of_creation").innerHTML = "Date of Creation: " + result["dateCreate"];
@@ -40,8 +38,6 @@ function handleParticipantClick(e) {
 	participant["username"] = document.getElementById("username").value;
 	participant["password"] = document.getElementById("password").value;
 
-// JSON -> String stringify
-// String -> JSON parse
 	var js1 = JSON.stringify(participant);
 	console.log(js1);
 	var xhr1 = new XMLHttpRequest();
