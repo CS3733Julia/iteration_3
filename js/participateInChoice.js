@@ -2,31 +2,41 @@
  * participating in a choice
  */
 function processParticipant(result, member) {
-	//console.log(result)
-	//console.log(result.description);
-	// WEbsite shows
-	//console.log(member);
+	console.log(result)
+	console.log(member);
 	document.getElementById( "display" ).style.display = "block"
 	document.getElementById("display_choiceDescription").innerHTML = result["description"];
 	document.getElementById("date_of_creation").innerHTML = "Date of Creation: " + result["dateCreate"];
     document.getElementById("unique_id").innerHTML = "Choice ID: " + result["idChoice"];
     document.getElementById("member_id").innerHTML = member;
-
-	if(result["completedDate"] != "") {
-		document.getElementById("date_of_completion").innerHTML = "Date of Completion: " + result["completedDate"];
+	if(result["dateComplete"] != "") {
+		console.log(result["dateComplete"])
+		document.getElementById("date_of_completion").innerHTML = "Date of Completion: " + result["dateComplete"];
 	}
 	alt_array = result["alternatives"]
     console.log(alt_array)
-    for(var i = 0; i < 5; i++){ //Bad habbit but it works for now
+    for(var i = 0; i < 5; i++){ 
         document.getElementById("alt" + (i + 1) + "_card").style.display = 'none';     
     }
+
 	for (var i = 0; i < alt_array.length; i++) {
-        processPreference(result, alt_array[i].idAlternative)
+		processPreference(result, alt_array[i].idAlternative)
 		console.log(alt_array[i].descriptionAlternative);
 		console.log("a" + (i + 1) + "_description")
-        document.getElementById("a" + (i + 1) + "_descriptiondisplay").innerHTML = alt_array[i].descriptionAlternative;
-        document.getElementById("a" + (i + 1) + "_id").innerHTML = alt_array[i].idAlternative;
-        document.getElementById("alt" + (i + 1) + "_card").style.display = 'block';     
+		document.getElementById("a" + (i + 1) + "_descriptiondisplay").innerHTML = alt_array[i].descriptionAlternative;
+		document.getElementById("a" + (i + 1) + "_id").innerHTML = alt_array[i].idAlternative;
+		document.getElementById("alt" + (i + 1) + "_card").style.display = 'block'; 
+		if(result["dateComplete"] != "") {
+			if(alt_array[i].isChosen){
+				document.getElementById("a" + (i + 1) + "_header").style = "background-color: green";
+				document.getElementById("a" + (i + 1) + "_descriptiondisplay").innerHTML += "- Chosen"
+			}
+			document.getElementById("a" + (i + 1) + "_approveButton").disabled = true;
+			document.getElementById("a" + (i + 1) + "_disapproveButton").disabled = true;
+			document.getElementById("a" + (i + 1) + "_select_button").disabled = true;
+			document.getElementById("a" + (i + 1) + "_addFeedbackButton").disabled = true;
+			document.getElementById("a" + (i + 1) + "_feedbackDescription").disabled = true;
+		}  
 	}
 	
 }
@@ -40,8 +50,6 @@ function handleParticipantClick(e) {
 	participant["username"] = document.getElementById("username").value;
 	participant["password"] = document.getElementById("password").value;
 
-// JSON -> String stringify
-// String -> JSON parse
 	var js1 = JSON.stringify(participant);
 	console.log(js1);
 	var xhr1 = new XMLHttpRequest();
