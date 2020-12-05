@@ -483,4 +483,29 @@ public class JuliaDAO {
   
         return new Choice(idChoice, null, null, 0, dateCreate, dateComplete);
     }
+
+    
+	public void selectAlternative(String idAlternative, String idChoice) throws Exception {
+        try {
+            PreparedStatement psA = conn.prepareStatement("UPDATE Alternative" + "SET isChosen = ? " +" WHERE idAlternative=?;");
+            psA.setInt(1,  1);
+            psA.setString(2,  idAlternative);
+            psA.executeUpdate();
+            
+            PreparedStatement psC = conn.prepareStatement("UPDATE Alternative" + "SET dateComplete = ? " + " WHERE idChoice=?;");
+    		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime dateComplete = LocalDateTime.now();
+            psC.setString(1, dateComplete.format(formatter));
+            psC.setString(2, idChoice);
+            psC.executeUpdate();
+            
+            psA.close();
+            psC.close();
+
+
+        } catch (Exception e) {
+        	e.printStackTrace();
+            throw new Exception("Failed in selecting Alternative: " + e.getMessage());
+        }
+	}
 }
