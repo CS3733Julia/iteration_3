@@ -21,6 +21,7 @@ public class completeChoiceLambda implements RequestHandler<completeChoiceReques
 		return choice;
 	}
 	
+	
 	@Override 
 	public completeChoiceResponse handleRequest(completeChoiceRequest req, Context context)  {
 		logger = context.getLogger();

@@ -487,15 +487,15 @@ public class JuliaDAO {
     
 	public void selectAlternative(String idAlternative, String idChoice) throws Exception {
         try {
-            PreparedStatement psA = conn.prepareStatement("UPDATE Alternative" + "SET isChosen = ? " +" WHERE idAlternative=?;");
+            PreparedStatement psA = conn.prepareStatement("UPDATE Alternative SET isChosen = ? WHERE idAlternative=?;");
             psA.setInt(1,  1);
             psA.setString(2,  idAlternative);
             psA.executeUpdate();
             
-            PreparedStatement psC = conn.prepareStatement("UPDATE Alternative" + "SET dateComplete = ? " + " WHERE idChoice=?;");
+            PreparedStatement psC = conn.prepareStatement("UPDATE Choice SET dateComplete = ? WHERE idChoice=?;");
     		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime dateComplete = LocalDateTime.now();
-            psC.setString(1, dateComplete.format(formatter));
+            psC.setObject(1, dateComplete);
             psC.setString(2, idChoice);
             psC.executeUpdate();
             

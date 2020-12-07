@@ -3,7 +3,7 @@ package com.julia.http;
 public class completeChoiceRequest {
 	public String idAlternative;
 	
-	public completeChoiceRequest(String idAlternative, String idMember) {
+	public completeChoiceRequest(String idAlternative) {
 		this.idAlternative = idAlternative;
 	}
 	
