@@ -113,10 +113,11 @@ public class JuliaDAO {
     
     public boolean createApproval(String idAlternative, String idMember) throws Exception {
     	try {
-        	PreparedStatement psA  = conn.prepareStatement("INSERT INTO Approved (idAlternative,idMember) VALUES(?,?);");
+        	PreparedStatement psA  = conn.prepareStatement("INSERT INTO Approved (idAlternative,idMember, idChoice) VALUES(?,?,?);");
     	    psA.setString(1, idAlternative);
     	    psA.setString(2, idMember);
-             
+    	    psA.setString(3, getChoicebyAlternative(idAlternative).idChoice);
+
             psA.execute();
             psA.close();
             return true;
@@ -128,10 +129,11 @@ public class JuliaDAO {
     
     public boolean createDisapproval(String idAlternative, String idMember) throws Exception {
     	try {
-        	PreparedStatement psD  = conn.prepareStatement("INSERT INTO Disapproved (idAlternative,idMember) VALUES(?,?);");
+        	PreparedStatement psD  = conn.prepareStatement("INSERT INTO Disapproved (idAlternative,idMember, idChoice) VALUES(?,?,?);");
     	    psD.setString(1, idAlternative);
     	    psD.setString(2, idMember);
-             
+    	    psD.setString(3, getChoicebyAlternative(idAlternative).idChoice);
+
             psD.execute();
             psD.close();
             return true;
