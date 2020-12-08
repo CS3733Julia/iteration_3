@@ -23,15 +23,10 @@ public class JuliaDAO {
     
     public boolean checkAvailability(String idChoice, String username, String password) throws Exception {
     	try {
-    		PreparedStatement psM;
-    		 ResultSet resultSetMember;
-    		try {
-    			psM = conn.prepareStatement("SELECT * FROM Member WHERE idChoice=?;");
-                psM.setString(1,  idChoice);
-                resultSetMember = psM.executeQuery();
-    		}catch(Exception e) {
-                throw new Exception("Choice does not exist");
-    		}
+			PreparedStatement psM = conn.prepareStatement("SELECT * FROM Member WHERE idChoice=?;");
+            psM.setString(1,  idChoice);
+            ResultSet resultSetMember = psM.executeQuery();
+    		
             int index = 0; 
             while (resultSetMember.next()) {           	
             	String usr = resultSetMember.getString("username");
@@ -48,7 +43,7 @@ public class JuliaDAO {
             Choice selectedChoice = getChoice(idChoice);
             
             if (selectedChoice == null) {
-            	return false;
+                throw new Exception("Choice does not exist");
             }
             
             if(index < selectedChoice.maxParticipants) {
