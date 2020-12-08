@@ -475,13 +475,14 @@ public class JuliaDAO {
     // Helper function, the choice only needs id, dateCreate, and dateComplete for the admin page
     private Choice generateChoice(ResultSet resultSet) throws Exception {
         String idChoice  = resultSet.getString("idChoice");
+        String description  = resultSet.getString("descriptionChoice");
         String dateCreate = resultSet.getString("dateCreate");
         String dateComplete = resultSet.getString("dateComplete");
         if (dateComplete == null) {
         	dateComplete = "Not Complete";
         }
   
-        return new Choice(idChoice, null, null, 0, dateCreate, dateComplete);
+        return new Choice(idChoice, description, null, 0, dateCreate, dateComplete);
     }
 
     
