@@ -5,9 +5,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.julia.model.Alternative;
 import com.julia.model.Choice;
+import com.julia.model.Feedback;
 import com.julia.model.Member;
 
 public class JuliaDAO {
@@ -140,6 +142,24 @@ public class JuliaDAO {
             throw new Exception("Failed to create Disapproval: " + e.getMessage());
         }
     }
+    
+    public boolean addFeedback(Feedback feedback) throws Exception {
+    	try {
+        	PreparedStatement psF  = conn.prepareStatement("INSERT INTO Feedback (idChoice,idAlternative,idMember,descriptionFeedback,date) VALUES(?,?,?,?,?);");
+    	    psF.setString(1, feedback.idChoice);
+    	    psF.setString(2, feedback.idAlternative);
+    	    psF.setString(3, feedback.idMember);
+    	    psF.setString(4, feedback.description);
+    	    psF.setString(5, feedback.date);
+             
+            psF.execute();
+            psF.close();
+            return true;
+    	}catch (Exception e) {
+        	e.printStackTrace();
+            throw new Exception("Failed to add feedback: " + e.getMessage());
+        }
+    }
 
     public Choice getChoice(String UUID) throws Exception {
         
@@ -216,6 +236,11 @@ public class JuliaDAO {
             ResultSet resultSetDisapproved = psDp.executeQuery();
             ArrayList<String> listDisapproved = new ArrayList<String>(5);
             
+            PreparedStatement psF = conn.prepareStatement("SELECT * FROM " + "Feedback" + " WHERE idAlternative=?;");
+            psF.setString(1,  UUID);
+            ResultSet resultSetFeedback= psF.executeQuery();
+            ArrayList<Feedback> listFeedback = new ArrayList<Feedback>();
+            
             while (resultSetApproved.next()) {
             	listApproved.add(getMemberById(resultSetApproved.getString("idMember")).username);
             }
@@ -224,8 +249,12 @@ public class JuliaDAO {
             	listDisapproved.add(getMemberById(resultSetDisapproved.getString("idMember")).username);
             }
             
+            while(resultSetFeedback.next()) {
+            	listFeedback.add(generateFeedback(resultSetFeedback));
+            }
+            
             while (resultSetAlternative.next()) {
-            	alternative = generateAlternative(resultSetAlternative, listApproved, listDisapproved);
+            	alternative = generateAlternative(resultSetAlternative, listApproved, listDisapproved, listFeedback);
             }
             
             resultSetAlternative.close();
@@ -432,14 +461,14 @@ public class JuliaDAO {
         return new Choice (idChoice, description, alternatives, maxParticipants, formattedDateCreate, formattedDateComplete);
     }
     
-    private Alternative generateAlternative(ResultSet resultSet, ArrayList<String>  approvedSet, ArrayList<String>  disapprovedSet) throws Exception{
+    private Alternative generateAlternative(ResultSet resultSet, ArrayList<String>  approvedSet, ArrayList<String>  disapprovedSet, ArrayList<Feedback> feedback) throws Exception{
     	//TODO : add feedback and approvals- later iteration
     	String idAlternative = resultSet.getString("idAlternative");
     	String description = resultSet.getString("descriptionAlternative");
     	boolean isChosen = false;
     	if(resultSet.getInt("isChosen") == 1) { isChosen = true; }
     	
-    	return new Alternative(idAlternative, description, isChosen, approvedSet, disapprovedSet);
+    	return new Alternative(idAlternative, description, isChosen, approvedSet, disapprovedSet, feedback);
     }
     
     private Member generateMember(ResultSet resultSet) throws Exception{
@@ -448,6 +477,15 @@ public class JuliaDAO {
     	String password = resultSet.getString("password");
     	
     	return new Member(idMember, username, password);
+    }
+    
+    private Feedback generateFeedback(ResultSet resultSet) throws Exception{
+    	String idMember = resultSet.getString("idMember");
+    	Member member = getMemberById(idMember);
+    	String description = resultSet.getString("descriptionFeedback");
+    	String date = resultSet.getString("date");
+    	
+    	return new Feedback(member.username, description, date);
     }
     
     // get a list of all choices in the Database

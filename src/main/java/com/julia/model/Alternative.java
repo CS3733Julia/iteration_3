@@ -39,6 +39,16 @@ public class Alternative {
 		this.disapproved = disapproved;
 		this.isChosen = isChosen;	
 	}
+	
+	public Alternative(String idAlternative, String description, boolean isChosen,	
+			   ArrayList<String> approved, ArrayList<String> disapproved, ArrayList<Feedback> feedback){
+		this.idAlternative = idAlternative;
+		this.descriptionAlternative = description;
+		this.feedback = feedback;
+		this.approved = approved;
+		this.disapproved = disapproved;
+		this.isChosen = isChosen;	
+	}
 
 	public ArrayList<Feedback> getFeedback() {
 		return feedback;
