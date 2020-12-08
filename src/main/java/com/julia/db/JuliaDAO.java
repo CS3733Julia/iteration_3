@@ -23,16 +23,24 @@ public class JuliaDAO {
     
     public boolean checkAvailability(String idChoice, String username, String password) throws Exception {
     	try {
-    		PreparedStatement psM = conn.prepareStatement("SELECT * FROM Member WHERE idChoice=?;");
-            psM.setString(1,  idChoice);
-            ResultSet resultSetMember = psM.executeQuery();
-            
+    		PreparedStatement psM;
+    		 ResultSet resultSetMember;
+    		try {
+    			psM = conn.prepareStatement("SELECT * FROM Member WHERE idChoice=?;");
+                psM.setString(1,  idChoice);
+                resultSetMember = psM.executeQuery();
+    		}catch(Exception e) {
+                throw new Exception("Choice does not exist");
+    		}
             int index = 0; 
             while (resultSetMember.next()) {           	
             	String usr = resultSetMember.getString("username");
             	String psw = resultSetMember.getString("password");
             	if(usr.equals(username) && psw.equals(password)) {
             		return true;
+            	}
+            	else if(usr.equals(username)  && !psw.equals(password)) {
+            		throw new Exception("Incorrect Password");
             	}
             	index ++;
             }
@@ -50,7 +58,8 @@ public class JuliaDAO {
     	}
     	catch(Exception e) {
     		e.printStackTrace();
-            throw new Exception("Failed at checking for Members: " + e.getMessage());    	}
+            throw new Exception(e.getMessage());
+        }
     }
     
     //This function is for testing only- will need to be improved if used for lambda functions

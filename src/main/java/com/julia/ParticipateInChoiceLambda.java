@@ -16,11 +16,18 @@ public class ParticipateInChoiceLambda implements RequestHandler<ParticipateInCh
 		if (logger != null) { logger.log("in getChoice"); }
 		
 		JuliaDAO dao = new JuliaDAO();
-		if(dao.checkAvailability(idChoice, username, password)) {
-			return dao.getChoice(idChoice);
+		
+		try {
+			if(dao.checkAvailability(idChoice, username, password)) {
+				return dao.getChoice(idChoice);
+			}
+			else {
+				throw new Exception("To many members signed up for choice"); 
+			}
 		}
-		else {
-			throw new Exception("To many Members signed up for choice"); 
+		catch(Exception e) {
+			throw new Exception(e.getMessage()); 
+
 		}
 	}
 	
@@ -49,7 +56,7 @@ public class ParticipateInChoiceLambda implements RequestHandler<ParticipateInCh
 			String idMember = getMemberId(req);
 			response = new ParticipateInChoiceResponse(choice, idMember, 200);
 		} catch (Exception e) {
-			response = new ParticipateInChoiceResponse(400, "Unable to get choice: " + req.idChoice + "(" + e.getMessage() + ")");
+			response = new ParticipateInChoiceResponse(400,  e.getMessage());
 		}
 		return response;
 	}
