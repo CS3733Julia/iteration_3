@@ -563,6 +563,7 @@ public class JuliaDAO {
     // Helper function, the choice only needs id, dateCreate, and dateComplete for the admin page
     private Choice generateChoice(ResultSet resultSet) throws Exception {
         String idChoice  = resultSet.getString("idChoice");
+        String description  = resultSet.getString("descriptionChoice");
         String dateCreate = resultSet.getString("dateCreate");
         String dateComplete = resultSet.getString("dateComplete");
         String description = resultSet.getString("descriptionChoice");
@@ -571,6 +572,32 @@ public class JuliaDAO {
         }
   
         return new Choice(idChoice, description, null, 0, dateCreate, dateComplete);
+    }
+
+    
+	public Choice selectAlternative(String idAlternative, String idChoice) throws Exception {
+        try {
+            PreparedStatement psA = conn.prepareStatement("UPDATE Alternative SET isChosen = ? WHERE idAlternative=?;");
+            psA.setInt(1,  1);
+            psA.setString(2,  idAlternative);
+            psA.executeUpdate();
+            
+            PreparedStatement psC = conn.prepareStatement("UPDATE Choice SET dateComplete = ? WHERE idChoice=?;");
+    		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime dateComplete = LocalDateTime.now();
+            psC.setObject(1, dateComplete);
+            psC.setString(2, idChoice);
+            psC.executeUpdate();
+            
+            psA.close();
+            psC.close();
+
+            return getChoice(idChoice);
+            
+        } catch (Exception e) {
+        	e.printStackTrace();
+            throw new Exception("Failed in selecting Alternative: " + e.getMessage());
+        }
     }
     
     // give a list of choices after deleting choices which were more than n days old
