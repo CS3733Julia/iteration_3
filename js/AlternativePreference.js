@@ -1,48 +1,46 @@
 /**
- * participating in a choice
+ * Select Alternative Preference
  */
-function processParticipant(result, member) {
+function processPreference(result, alt_id) {
 	console.log(result)
-	console.log(member);
-	document.getElementById( "display" ).style.display = "block"
-	document.getElementById("display_choiceDescription").innerHTML = result["description"];
-	document.getElementById("date_of_creation").innerHTML = "Date of Creation: " + result["dateCreate"];
-    document.getElementById("unique_id").innerHTML = "Choice ID: " + result["idChoice"];
-    document.getElementById("member_id").innerHTML = member;
-
-	if(result["completedDate"] != "") {
-		document.getElementById("date_of_completion").innerHTML = "Date of Completion: " + result["completedDate"];
+	if(result != "Choice is complete") {
+		alt_array = result["alternatives"]
+		for (var i = 0; i < alt_array.length; i++) {
+			document.getElementById("a" + (i + 1) + "_errorCode").innerHTML= ''
+        	document.getElementById("a" + (i + 1) + "_errorCode").style.display = 'none';  
+			if(alt_id == alt_array[i].idAlternative){
+				document.getElementById("a" + (i + 1) + "_approvers").innerHTML = ""
+				document.getElementById("a" + (i + 1) + "_disapprovers").innerHTML = ""
+				for(var j = 0; j <alt_array[i].approved.length; j++){
+					document.getElementById("a" + (i + 1) + "_approvers").innerHTML += alt_array[i].approved[j] + "<br />"
+				}
+				for(var k = 0; k <alt_array[i].disapproved.length; k++){
+					document.getElementById("a" + (i + 1) + "_disapprovers").innerHTML += alt_array[i].disapproved[k] + "<br />"
+				}
+				document.getElementById("a" + (i + 1) + "_numApprove").innerHTML = "Approved: " + alt_array[i].approved.length;
+				document.getElementById("a" + (i + 1) + "_numDisapprove").innerHTML = "Disapproved: " + alt_array[i].disapproved.length;
+			}
+		}
+	}else{
+		document.getElementById(alt_id + "_errorCode").innerHTML= 'Choice Has Been Completed, Please Refresh Page'
+        document.getElementById(alt_id+ "_errorCode").style.display = 'block';  
 	}
-	alt_array = result["alternatives"]
-    console.log(alt_array)
-    for(var i = 0; i < 5; i++){ //Bad habbit but it works for now
-        document.getElementById("alt" + (i + 1) + "_card").style.display = 'none';     
-    }
-	for (var i = 0; i < alt_array.length; i++) {
-        processPreference(result, alt_array[i].idAlternative)
-		console.log(alt_array[i].descriptionAlternative);
-		console.log("a" + (i + 1) + "_description")
-        document.getElementById("a" + (i + 1) + "_descriptiondisplay").innerHTML = alt_array[i].descriptionAlternative;
-        document.getElementById("a" + (i + 1) + "_id").innerHTML = alt_array[i].idAlternative;
-        document.getElementById("alt" + (i + 1) + "_card").style.display = 'block';     
-	}
-	
 }
 
-function handleParticipantClick(e) {
-	console.log("got here")
-	var form = document.participateForm;
-	var participant = {};
+function handleApprovalClick(e, a_id, a_key) {
+	console.log("Approving")
+    var approval = {};
+    
+	approval["idAlternative"] = a_id;
+	approval["idMember"] =document.getElementById("member_id").innerHTML;
 
-	participant["idChoice"] = document.getElementById("choiceId").value;
-	participant["username"] = document.getElementById("username").value;
-	participant["password"] = document.getElementById("password").value;
+    console.log(approval)
 
-	var js1 = JSON.stringify(participant);
+	var js1 = JSON.stringify(approval);
 	console.log(js1);
 	var xhr1 = new XMLHttpRequest();
 	console.log("after printing js");
-	xhr1.open("POST", participateInChoiceUrl, true);
+	xhr1.open("POST", approveAlternativeUrl, true);
 	console.log("after post");
 	
 	xhr1.send(js1);
@@ -55,7 +53,12 @@ function handleParticipantClick(e) {
 		if (xhr1.readyState == XMLHttpRequest.DONE) {
 			if (xhr1.status == 200) {
 				var js = JSON.parse(xhr1.responseText);
-				processParticipant(js["choice"], js["idMember"]);
+				if(js["statusCode"] == 400){
+					processPreference(js["error"], a_key);
+				}
+				else{
+					processPreference(js["choice"], a_id);
+				}
 			} else {
 				console.log("actual:" + xhr1.responseText)
 				var js = JSON.parse(xhr1.responseText);
@@ -63,7 +66,51 @@ function handleParticipantClick(e) {
 				alert(err);
 			}
 		} else {
-			processParticipant("N/A", "N/A");
+			processPreference("N/A", a_id);
+		}
+	}
+}
+
+function handleDisapprovalClick(e, a_id, a_key) {
+	console.log("Disapproving")
+    var disapproval = {};
+    
+	disapproval["idAlternative"] = a_id;
+	disapproval["idMember"] =document.getElementById("member_id").innerHTML;
+
+    console.log(disapproval)
+
+	var js1 = JSON.stringify(disapproval);
+	console.log(js1);
+	var xhr1 = new XMLHttpRequest();
+	console.log("after printing js");
+	xhr1.open("POST", disapproveAlternativeUrl, true);
+	console.log("after post");
+	
+	xhr1.send(js1);
+	console.log("after sending js");
+
+	// process the results and update the html
+	xhr1.onloadend = function() {
+		console.log(xhr1);
+		/*console.log(xhr1.request);*/
+		if (xhr1.readyState == XMLHttpRequest.DONE) {
+			if (xhr1.status == 200) {
+				var js = JSON.parse(xhr1.responseText);
+				if(js["statusCode"] == 400){
+					processPreference(js["error"], a_key);
+				}
+				else{
+					processPreference(js["choice"], a_id);
+				}
+			} else {
+				console.log("actual:" + xhr1.responseText)
+				var js = JSON.parse(xhr1.responseText);
+				var err = js["response"];
+				alert(err);
+			}
+		} else {
+			processPreference("N/A", a_id);
 		}
 	}
 }

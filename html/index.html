@@ -38,6 +38,8 @@
           <label for='password'>Password</label>
           <input type='text' id='password' value=''>
           <br>
+          <div id= "Error" style="color: red; display: none"></div>
+          <br>
           <button id='participateButton' onClick="JavaScript:handleParticipantClick(this)" type="button" class="btn btn-primary">Participate</button>
         </form>
       </li >
@@ -90,6 +92,7 @@
         <p id='date_of_creation'><b>Date of Creation:</b></p>
         <p id='date_of_completion'></p>
         <p id='unique_id'></p>
+        <p id='raw_choice_id' hidden></p>
         <p id='member_id' hidden></p>
       </div>
 
@@ -123,8 +126,8 @@
             <div class="col-sm-4">
               <div class="card-body">
                 <div class="mx-auto" style="width: 225px;">
-                  <button id='a1_approveButton' onclick= "JavaScript:handleApprovalClick(this, document.getElementById('a1_id').innerHTML)" class="btn btn-outline-success" style="width: 110px;">Approve</button>
-                  <button id='a1_disapproveButton' onclick= "JavaScript:handleDisapprovalClick(this, document.getElementById('a1_id').innerHTML)" class="btn btn-outline-danger" style="width: 110px;">Disapprove</button>   
+                  <button id='a1_approveButton' onclick= "JavaScript:handleApprovalClick(this, document.getElementById('a1_id').innerHTML, 'a1')" class="btn btn-outline-success" style="width: 110px;">Approve</button>
+                  <button id='a1_disapproveButton' onclick= "JavaScript:handleDisapprovalClick(this, document.getElementById('a1_id').innerHTML, 'a1')" class="btn btn-outline-danger" style="width: 110px;">Disapprove</button> 
                 </div>
                 <div class = "row mx-auto" style="width: 225px;">
                   <div id='a1_approvers' class = "col mt-2 overflow-auto mx-auto bg-light" style = "width: 100px; height: 153px;">
@@ -139,9 +142,7 @@
             <div class="col" style ="width: 300px;">
               <div class="card-body">
                 <div class = "row">
-                  <div id='a1_feedback' class="overflow-auto bg-light" style = "width: 545px; height: 200px;">
-                    feedback will go here
-                  </div>
+                  <div id='a1_feedback' class="overflow-auto bg-light" style = "width: 545px; height: 200px;"></div>
                 </div>
               </div>
             </div>
@@ -151,11 +152,12 @@
             <div class = "col-sm-4 text-center" style="height: 50px;">
                 <button id='a1_select_button' onClick="JavaScript: handleCompleteChoiceClick(this, 'a1')" class="btn btn-primary ">Select Alternative</button>
             </div>
-            <div class = "col" style="height: 50px;"> 
+            <div class = "col" style="height: 75px;"> 
               <div id='a1_addFeedback'>
                   <input type='text' id='a1_feedbackDescription' style="width: 485px;" value='' required>
                   <button type="button" id='a1_addFeedbackButton' onClick="JavaScript:handleFeedbackClick(this, 'a1')" class="btn btn-primary mb-2">Add</button>
-              </div>    
+              </div>   
+              <div id = "a1_errorCode" class = 'justify-content-center' style="color: red; display: none"></div> 
             </div>
           </div>
         </div>
@@ -191,8 +193,8 @@
             <div class="col-sm-4">
               <div class="card-body">
                 <div class="mx-auto" style="width: 225px;">
-                  <button id='a2_approveButton' onclick= "JavaScript:handleApprovalClick(this, document.getElementById('a2_id').innerHTML)" class="btn btn-outline-success" style="width: 110px;">Approve</button>
-                  <button id='a2_disapproveButton' onclick= "JavaScript:handleDisapprovalClick(this, document.getElementById('a2_id').innerHTML)" class="btn btn-outline-danger" style="width: 110px;">Disapprove</button>   
+                  <button id='a2_approveButton' onclick= "JavaScript:handleApprovalClick(this, document.getElementById('a2_id').innerHTML, 'a2')" class="btn btn-outline-success" style="width: 110px;">Approve</button>
+                  <button id='a2_disapproveButton' onclick= "JavaScript:handleDisapprovalClick(this, document.getElementById('a2_id').innerHTML, 'a2')" class="btn btn-outline-danger" style="width: 110px;">Disapprove</button>   
                 </div>
                 <div class = "row mx-auto" style="width: 225px;">
                   <div id='a2_approvers' class = "col mt-2 overflow-auto mx-auto bg-light" style = "width: 100px; height: 153px;">
@@ -207,9 +209,7 @@
             <div class="col" style ="width: 300px;">
               <div class="card-body">
                 <div class = "row">
-                  <div id='a2_feedback' class="overflow-auto bg-light" style = "width: 545px; height: 200px;">
-                    feedback will go here
-                  </div>
+                  <div id='a2_feedback' class="overflow-auto bg-light" style = "width: 545px; height: 200px;"></div>
                 </div>
               </div>
             </div>
@@ -219,11 +219,12 @@
             <div class = "col-sm-4 text-center" style="height: 50px;">
                 <button id='a2_select_button'  onClick="JavaScript: handleCompleteChoiceClick(this, 'a2')" class="btn btn-primary ">Select Alternative</button>
             </div>
-            <div class = "col" style="height: 50px;"> 
+            <div class = "col" style="height: 75px;"> 
               <div id='a2_addFeedback'>
                 <input type='text' id='a2_feedbackDescription' style="width: 485px;" value='' required>
                 <button id='a2_addFeedbackButton' onClick="JavaScript:handleFeedbackClick(this, 'a2')" class="btn btn-primary mb-2">Add</button>
               </div>
+              <div id = "a2_errorCode" class = 'justify-content-center' style="color: red; display: none"></div> 
             </div>
           </div>
         </div>
@@ -259,8 +260,8 @@
             <div class="col-sm-4">
               <div class="card-body">
                 <div class="mx-auto" style="width: 225px;">
-                  <button id='a3_approveButton' onclick= "JavaScript:handleApprovalClick(this, document.getElementById('a3_id').innerHTML)" class="btn btn-outline-success" style="width: 110px;">Approve</button>
-                  <button id='a3_disapproveButton' onclick= "JavaScript:handleDisapprovalClick(this, document.getElementById('a3_id').innerHTML)" class="btn btn-outline-danger" style="width: 110px;">Disapprove</button>   
+                  <button id='a3_approveButton' onclick= "JavaScript:handleApprovalClick(this, document.getElementById('a3_id').innerHTML, 'a3')" class="btn btn-outline-success" style="width: 110px;">Approve</button>
+                  <button id='a3_disapproveButton' onclick= "JavaScript:handleDisapprovalClick(this, document.getElementById('a3_id').innerHTML, 'a3')" class="btn btn-outline-danger" style="width: 110px;">Disapprove</button>   
                 </div>
                 <div class = "row mx-auto" style="width: 225px;">
                   <div id='a3_approvers' class = "col mt-2 overflow-auto mx-auto bg-light" style = "width: 100px; height: 153px;">
@@ -275,9 +276,7 @@
             <div class="col" style ="width: 300px;">
               <div class="card-body">
                 <div class = "row">
-                  <div id='a3_feedback' class="overflow-auto bg-light" style = "width: 545px; height: 200px;">
-                    feedback will go here
-                  </div>
+                  <div id='a3_feedback' class="overflow-auto bg-light" style = "width: 545px; height: 200px;"></div>
                 </div>
               </div>
             </div>
@@ -287,11 +286,12 @@
             <div class = "col-sm-4 text-center" style="height: 50px;">
                 <button id='a3_select_button'  onClick="JavaScript: handleCompleteChoiceClick(this, 'a3')" class="btn btn-primary ">Select Alternative</button>
             </div>
-            <div class = "col" style="height: 50px;"> 
+            <div class = "col" style="height: 75px;"> 
               <div id='a3_addFeedback'>
                 <input type='text' id='a3_feedbackDescription' style="width: 485px;" value='' required>
                 <button id='a3_addFeedbackButton' onClick="JavaScript:handleFeedbackClick(this, 'a3')" class="btn btn-primary mb-2">Add</button>
               </div>
+              <div id = "a3_errorCode" class = 'justify-content-center' style="color: red; display: none"></div> 
             </div>
           </div>
         </div>
@@ -327,8 +327,8 @@
             <div class="col-sm-4">
               <div class="card-body">
                 <div class="mx-auto" style="width: 225px;">
-                  <button id='a4_approveButton' onclick= "JavaScript:handleApprovalClick(this, document.getElementById('a4_id').innerHTML)" class="btn btn-outline-success" style="width: 110px;">Approve</button>
-                  <button id='a4_disapproveButton' onclick= "JavaScript:handleDisapprovalClick(this, document.getElementById('a4_id').innerHTML)" class="btn btn-outline-danger" style="width: 110px;">Disapprove</button>   
+                  <button id='a4_approveButton' onclick= "JavaScript:handleApprovalClick(this, document.getElementById('a4_id').innerHTML, 'a4')" class="btn btn-outline-success" style="width: 110px;">Approve</button>
+                  <button id='a4_disapproveButton' onclick= "JavaScript:handleDisapprovalClick(this, document.getElementById('a4_id').innerHTML, 'a4')" class="btn btn-outline-danger" style="width: 110px;">Disapprove</button>   
                 </div>
                 <div class = "row mx-auto" style="width: 225px;">
                   <div id='a4_approvers' class = "col mt-2 overflow-auto mx-auto bg-light" style = "width: 100px; height: 153px;">
@@ -343,9 +343,7 @@
             <div class="col" style ="width: 300px;">
               <div class="card-body">
                 <div class = "row">
-                  <div id='a4_feedback' class="overflow-auto bg-light" style = "width: 545px; height: 200px;">
-                    feedback will go here
-                  </div>
+                  <div id='a4_feedback' class="overflow-auto bg-light" style = "width: 545px; height: 200px;"></div>
                 </div>
               </div>
             </div>
@@ -355,11 +353,12 @@
             <div class = "col-sm-4 text-center" style="height: 50px;">
                 <button id='a4_select_button'  onClick="JavaScript: handleCompleteChoiceClick(this, 'a4')" class="btn btn-primary ">Select Alternative</button>
             </div>
-            <div class = "col" style="height: 50px;"> 
+            <div class = "col" style="height: 75px;"> 
               <div id='a4_addFeedback'>
                 <input type='text' id='a4_feedbackDescription' style="width: 485px;" value='' required>
                 <button id='a4_addFeedbackButton' onClick="JavaScript:handleFeedbackClick(this, 'a4')" class="btn btn-primary mb-2">Add</button>
               </div>
+              <div id = "a4_errorCode" class = 'justify-content-center' style="color: red; display: none"></div> 
             </div>
           </div>
         </div>
@@ -395,8 +394,8 @@
             <div class="col-sm-4">
               <div class="card-body">
                 <div class="mx-auto" style="width: 225px;">
-                  <button id='a5_approveButton' onclick= "JavaScript:handleApprovalClick(this, document.getElementById('a5_id').innerHTML)" class="btn btn-outline-success" style="width: 110px;">Approve</button>
-                  <button id='a5_disapproveButton' onclick= "JavaScript:handleDisapprovalClick(this, document.getElementById('a5_id').innerHTML)" class="btn btn-outline-danger" style="width: 110px;">Disapprove</button>   
+                  <button id='a5_approveButton' onclick= "JavaScript:handleApprovalClick(this, document.getElementById('a5_id').innerHTML, 'a5')" class="btn btn-outline-success" style="width: 110px;">Approve</button>
+                  <button id='a5_disapproveButton' onclick= "JavaScript:handleDisapprovalClick(this, document.getElementById('a5_id').innerHTML, 'a5')" class="btn btn-outline-danger" style="width: 110px;">Disapprove</button>   
                 </div>
                 <div class = "row mx-auto" style="width: 225px;">
                   <div id='a5_approvers' class = "col mt-2 overflow-auto mx-auto bg-light" style = "width: 100px; height: 153px;">
@@ -411,9 +410,7 @@
             <div class="col" style ="width: 300px;">
               <div class="card-body">
                 <div class = "row">
-                  <div id='a5_feedback' class="overflow-auto bg-light" style = "width: 545px; height: 200px;">
-                    feedback will go here
-                  </div>
+                  <div id='a5_feedback' class="overflow-auto bg-light" style = "width: 545px; height: 200px;"></div>
                 </div>
               </div>
             </div>
@@ -423,11 +420,12 @@
             <div class = "col-sm-4 text-center" style="height: 50px;">
                 <button id='a5_select_button'  onClick="JavaScript: handleCompleteChoiceClick(this, 'a5')" class="btn btn-primary ">Select Alternative</button>
             </div>
-            <div class = "col" style="height: 50px;"> 
+            <div class = "col" style="height: 75px;"> 
               <div id='a5_addFeedback'>
                 <input type='text' id='a5_feedbackDescription' style="width: 485px;" value='' required>
                 <button id='a5_addFeedbackButton' onClick="JavaScript:handleFeedbackClick(this, 'a5')" class="btn btn-primary mb-2">Add</button>
               </div>
+              <div id = "a5_errorCode" class = 'justify-content-center' style="color: red; display: none"></div> 
             </div>
           </div>
         </div>

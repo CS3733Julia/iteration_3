@@ -15,7 +15,13 @@ public class completeChoiceLambda implements RequestHandler<completeChoiceReques
 		if (logger != null) { logger.log("in completeChoice"); }
 		
 		JuliaDAO dao = new JuliaDAO();
+		
 		Choice choice = dao.getChoicebyAlternative(idAlternative);
+		if(dao.checkChoiceComplete(choice.idChoice)) {
+			throw new Exception("Choice is complete"); 
+		}
+		
+		choice = dao.getChoicebyAlternative(idAlternative);
 		Choice updatedChoice =dao.selectAlternative(idAlternative, choice.idChoice);
 		
 		return updatedChoice;
@@ -34,7 +40,7 @@ public class completeChoiceLambda implements RequestHandler<completeChoiceReques
 			logger.log(response.toString());
 			
 		} catch (Exception e) {
-			response = new completeChoiceResponse("Unable to complete Choice", 400);
+			response = new completeChoiceResponse(e.getMessage(), 400);
 		}
 
 		return response;
