@@ -14,8 +14,14 @@ public class ApproveAlternativeLambda implements RequestHandler<ApproveRequest, 
 	
 	Choice ApproveAlternative(String idAlternative, String idMember) throws Exception{
 		if (logger != null) { logger.log("in ApproveAlternative"); }
-		
+	
 		JuliaDAO dao = new JuliaDAO();
+		
+		Choice choice = dao.getChoicebyAlternative(idAlternative);
+		if(dao.checkChoiceComplete(choice.idChoice)) {
+			throw new Exception("Choice is complete"); 
+		}
+		
 		if (dao.checkApproval(idAlternative, idMember)) {
 			dao.deleteApproval(idAlternative, idMember);
 		}
@@ -27,7 +33,7 @@ public class ApproveAlternativeLambda implements RequestHandler<ApproveRequest, 
 			dao.createApproval(idAlternative, idMember);
 		}
 		
-		Choice choice = dao.getChoicebyAlternative(idAlternative);
+		choice = dao.getChoicebyAlternative(idAlternative);
 		return choice;
 	}
 
@@ -43,7 +49,7 @@ public class ApproveAlternativeLambda implements RequestHandler<ApproveRequest, 
 			logger.log(response.toString());
 			
 		} catch (Exception e) {
-			response = new ApproveResponse("Unable to approve alternative", 400);
+			response = new ApproveResponse(e.getMessage(), 400);
 		}
 
 		return response;
