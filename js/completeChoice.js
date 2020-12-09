@@ -1,11 +1,17 @@
 /**
  * complete a choice
  */
-function processChoice(result) {
-    var member = document.getElementById("member_id").innerHTML;
-    console.log("LOOK HERE")
-    console.log(result)
-    processParticipant(result, member)
+function processChoice(result, a_key) {
+
+    if(result != "Choice is complete") { 
+        var member = document.getElementById("member_id").innerHTML;
+        console.log("LOOK HERE")
+        console.log(result)
+        processParticipant(result, member)
+    }else{
+        document.getElementById(a_key + "_errorCode").innerHTML= 'Choice Has Been Completed, Please Refresh Page'
+        document.getElementById(a_key+ "_errorCode").style.display = 'block';  
+    }
 }
 
 function handleCompleteChoiceClick(e, a_key) {
@@ -32,8 +38,12 @@ function handleCompleteChoiceClick(e, a_key) {
             if (xhr1.status == 200) {
                 var js = JSON.parse(xhr1.responseText);
                 console.log(js)
-
-                processChoice(js["choice"]);
+                if(js["statusCode"] == 400){
+                    processChoice(js["error"], a_key);
+                }
+                else{
+                    processChoice(js["choice"], a_key);
+                }
             } else {
                 console.log("actual:" + xhr1.responseText)
                 var js = JSON.parse(xhr1.responseText);
