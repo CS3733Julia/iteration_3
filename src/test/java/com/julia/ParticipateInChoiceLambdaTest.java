@@ -18,6 +18,8 @@ import com.julia.http.ParticipateInChoiceResponse;
 import com.julia.model.Member;
 
 public class ParticipateInChoiceLambdaTest extends LambdaTest{
+	String TestChoiceID = createChoice();
+	
     String testSuccessInput(String incoming) throws IOException {
     	ParticipateInChoiceLambda handler = new ParticipateInChoiceLambda();
     	ParticipateInChoiceRequest req = new Gson().fromJson(incoming, ParticipateInChoiceRequest.class);
@@ -34,15 +36,31 @@ public class ParticipateInChoiceLambdaTest extends LambdaTest{
     	ParticipateInChoiceResponse resp = handler.handleRequest(req, createContext("login"));
         Assert.assertEquals(failureCode, resp.statusCode);
     }
+    
+    
+    String createChoice() {
+    	String testdesc = "this is a test";
+    	ArrayList<String> testalt = new ArrayList<String>();
+		testalt.add("tesing1");
+		testalt.add("tesing2");
+		int maxParticipants = 3;
+		
+		CreateChoiceRequest cc = new CreateChoiceRequest(testdesc, testalt, maxParticipants);
+		String SAMPLE_INPUT_STRING = new Gson().toJson(cc);
+		CreateChoiceLambda handler = new CreateChoiceLambda();
+    	CreateChoiceRequest req = new Gson().fromJson(SAMPLE_INPUT_STRING, CreateChoiceRequest.class);
+       
+    	CreateChoiceResponse resp = handler.handleRequest(req, createContext("create"));
+        return resp.idChoice;
+    }
 
    
     @Test
     public void testShouldBeOk() {
-    	String id = "3283e6ba-e5cd-4e76-bdce-77dd2b3dffb4";
     	String username = "Jack";
     	String password = "";
 		
-    	ParticipateInChoiceRequest lr = new ParticipateInChoiceRequest(id, username, password);
+    	ParticipateInChoiceRequest lr = new ParticipateInChoiceRequest(TestChoiceID, username, password);
 		
         String SAMPLE_INPUT_STRING = new Gson().toJson(lr);  
         String idChoice = "";
@@ -55,11 +73,10 @@ public class ParticipateInChoiceLambdaTest extends LambdaTest{
     
     @Test
     public void testAlreadyPresent() {
-       	String id = "a0e2a30f-3bca-4f80-9ab8-6958d887e9ee";
-    	String username = "Bill";
+    	String username = "Jack";
     	String password = "";
 		
-    	ParticipateInChoiceRequest lr = new ParticipateInChoiceRequest(id, username, password);
+    	ParticipateInChoiceRequest lr = new ParticipateInChoiceRequest(TestChoiceID, username, password);
 		
         String SAMPLE_INPUT_STRING = new Gson().toJson(lr);  
         String idChoice = "";
@@ -81,11 +98,10 @@ public class ParticipateInChoiceLambdaTest extends LambdaTest{
     
     @Test
     public void testPasswordPresent() {
-       	String id = "086dcf1c-9d16-41da-a7a6-c5b84391f4fb";
     	String username = "Jack";
     	String password = "hey";
 		
-    	ParticipateInChoiceRequest lr = new ParticipateInChoiceRequest(id, username, password);
+    	ParticipateInChoiceRequest lr = new ParticipateInChoiceRequest(TestChoiceID, username, password);
 		
         String SAMPLE_INPUT_STRING = new Gson().toJson(lr);  
         String idChoice = "";
@@ -107,7 +123,6 @@ public class ParticipateInChoiceLambdaTest extends LambdaTest{
     
     @Test
     public void testTooManyMembers() {
-       	String id = "b916141c-f289-45a1-9c77-5a0a284cbe1a";
     	String username = "Larry";
     	String username1 = "Harry";
     	String username2 = "Barry";
@@ -115,10 +130,10 @@ public class ParticipateInChoiceLambdaTest extends LambdaTest{
 
     	String password = "";
 		
-    	ParticipateInChoiceRequest lr = new ParticipateInChoiceRequest(id, username, password);
-    	ParticipateInChoiceRequest lr1 = new ParticipateInChoiceRequest(id, username1, password);
-    	ParticipateInChoiceRequest lr2 = new ParticipateInChoiceRequest(id, username2, password);
-    	ParticipateInChoiceRequest lr3 = new ParticipateInChoiceRequest(id, username3, password);
+    	ParticipateInChoiceRequest lr = new ParticipateInChoiceRequest(TestChoiceID, username, password);
+    	ParticipateInChoiceRequest lr1 = new ParticipateInChoiceRequest(TestChoiceID, username1, password);
+    	ParticipateInChoiceRequest lr2 = new ParticipateInChoiceRequest(TestChoiceID, username2, password);
+    	ParticipateInChoiceRequest lr3 = new ParticipateInChoiceRequest(TestChoiceID, username3, password);
 
         String SAMPLE_INPUT_STRING = new Gson().toJson(lr);  
         String SAMPLE_INPUT_STRING1 = new Gson().toJson(lr1);  
