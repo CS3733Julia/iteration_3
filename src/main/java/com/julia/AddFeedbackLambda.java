@@ -19,6 +19,11 @@ public class AddFeedbackLambda implements RequestHandler<AddFeedbackRequest, Add
 		if (logger != null) { logger.log("in AddFeedback"); }
 		
 		JuliaDAO dao = new JuliaDAO();
+		if(dao.checkChoiceComplete(idChoice)) {
+			logger.log("choice was already complete");
+			throw new Exception("Choice is complete"); 
+		}
+		
 		Feedback feedback = new Feedback(idChoice, idAlternative, idMember, description);
 		Choice choice = null;
 		if (dao.addFeedback(feedback)) {
@@ -39,7 +44,7 @@ public class AddFeedbackLambda implements RequestHandler<AddFeedbackRequest, Add
 			logger.log(response.toString());
 			
 		} catch (Exception e) {
-			response = new AddFeedbackResponse("Unable to add feedback", 400);
+			response = new AddFeedbackResponse(e.getMessage(), 400);
 		}
 
 		return response;
