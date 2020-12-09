@@ -23,10 +23,10 @@ public class JuliaDAO {
     
     public boolean checkAvailability(String idChoice, String username, String password) throws Exception {
     	try {
-    		PreparedStatement psM = conn.prepareStatement("SELECT * FROM Member WHERE idChoice=?;");
+			PreparedStatement psM = conn.prepareStatement("SELECT * FROM Member WHERE idChoice=?;");
             psM.setString(1,  idChoice);
             ResultSet resultSetMember = psM.executeQuery();
-            
+    		
             int index = 0; 
             while (resultSetMember.next()) {           	
             	String usr = resultSetMember.getString("username");
@@ -34,13 +34,16 @@ public class JuliaDAO {
             	if(usr.equals(username) && psw.equals(password)) {
             		return true;
             	}
+            	else if(usr.equals(username)  && !psw.equals(password)) {
+            		throw new Exception("Incorrect Password");
+            	}
             	index ++;
             }
             
             Choice selectedChoice = getChoice(idChoice);
             
             if (selectedChoice == null) {
-            	return false;
+                throw new Exception("Choice does not exist");
             }
             
             if(index < selectedChoice.maxParticipants) {
@@ -50,7 +53,8 @@ public class JuliaDAO {
     	}
     	catch(Exception e) {
     		e.printStackTrace();
-            throw new Exception("Failed at checking for Members: " + e.getMessage());    	}
+            throw new Exception(e.getMessage());
+        }
     }
     
     //This function is for testing only- will need to be improved if used for lambda functions
@@ -113,10 +117,11 @@ public class JuliaDAO {
     
     public boolean createApproval(String idAlternative, String idMember) throws Exception {
     	try {
-        	PreparedStatement psA  = conn.prepareStatement("INSERT INTO Approved (idAlternative,idMember) VALUES(?,?);");
+        	PreparedStatement psA  = conn.prepareStatement("INSERT INTO Approved (idAlternative,idMember, idChoice) VALUES(?,?,?);");
     	    psA.setString(1, idAlternative);
     	    psA.setString(2, idMember);
-             
+    	    psA.setString(3, getChoicebyAlternative(idAlternative).idChoice);
+
             psA.execute();
             psA.close();
             return true;
@@ -128,10 +133,11 @@ public class JuliaDAO {
     
     public boolean createDisapproval(String idAlternative, String idMember) throws Exception {
     	try {
-        	PreparedStatement psD  = conn.prepareStatement("INSERT INTO Disapproved (idAlternative,idMember) VALUES(?,?);");
+        	PreparedStatement psD  = conn.prepareStatement("INSERT INTO Disapproved (idAlternative,idMember, idChoice) VALUES(?,?,?);");
     	    psD.setString(1, idAlternative);
     	    psD.setString(2, idMember);
-             
+    	    psD.setString(3, getChoicebyAlternative(idAlternative).idChoice);
+
             psD.execute();
             psD.close();
             return true;
@@ -241,6 +247,27 @@ public class JuliaDAO {
         	e.printStackTrace();
             throw new Exception("Failed in getting alternative: " + e.getMessage());
         }
+    }
+    
+    
+    public boolean checkChoiceComplete(String idChoice) throws Exception {
+        try {
+    	PreparedStatement psC = conn.prepareStatement("SELECT dateComplete FROM Choice WHERE idChoice=?;");
+        psC.setString(1,  idChoice);
+        ResultSet resultSetChoice = psC.executeQuery();
+        
+        while (resultSetChoice.next()) {
+        	if (resultSetChoice.getString("dateComplete") != null) {
+        		return true;
+        	}
+        }
+        
+        return false;
+        
+        }catch (Exception e) {
+        	e.printStackTrace();
+            throw new Exception("Failed to check Choice: " + e.getMessage());
+        }	
     }
     
     public boolean checkApproval(String alternativeUUID, String memberUUID) throws Exception {
