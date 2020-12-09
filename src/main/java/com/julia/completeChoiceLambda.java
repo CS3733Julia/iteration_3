@@ -16,9 +16,9 @@ public class completeChoiceLambda implements RequestHandler<completeChoiceReques
 		
 		JuliaDAO dao = new JuliaDAO();
 		Choice choice = dao.getChoicebyAlternative(idAlternative);
-		dao.selectAlternative(idAlternative, choice.idChoice);
+		Choice updatedChoice =dao.selectAlternative(idAlternative, choice.idChoice);
 		
-		return choice;
+		return updatedChoice;
 	}
 	
 	

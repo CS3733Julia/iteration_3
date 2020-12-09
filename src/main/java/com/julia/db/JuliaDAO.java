@@ -486,7 +486,7 @@ public class JuliaDAO {
     }
 
     
-	public void selectAlternative(String idAlternative, String idChoice) throws Exception {
+	public Choice selectAlternative(String idAlternative, String idChoice) throws Exception {
         try {
             PreparedStatement psA = conn.prepareStatement("UPDATE Alternative SET isChosen = ? WHERE idAlternative=?;");
             psA.setInt(1,  1);
@@ -503,7 +503,8 @@ public class JuliaDAO {
             psA.close();
             psC.close();
 
-
+            return getChoice(idChoice);
+            
         } catch (Exception e) {
         	e.printStackTrace();
             throw new Exception("Failed in selecting Alternative: " + e.getMessage());
