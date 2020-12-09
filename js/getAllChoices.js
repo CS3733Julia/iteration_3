@@ -22,31 +22,56 @@ function processListResponse(result) {
   var js = JSON.parse(result);
   var choiceList = document.getElementById('spencer');
   var blankChoice = document.getElementById('choice_'); 
+  const adminTable = document.getElementById('adminTable')
+
+  
 
   var output = "";
   for (var i = 0; i < js.list.length; i++) {
     var choiceJson = js.list[i];
-    //console.log(choiceJson);
+    console.log(choiceJson);  
+	const tableBody = document.getElementById("adminBody");
 
-	var idChoice = choiceJson["idChoice"];
+	/*var idChoice = choiceJson["idChoice"];
+	var description = choiceJson["description"];
     var dateCreate = choiceJson["dateCreate"];
-    var dateComplete = choiceJson["dateComplete"];
+    var dateComplete = choiceJson["dateComplete"];*/
+   
+	let update = tableBody.insertRow(-1);
+	console.log("Here");
 
-	var newChoice = blankChoice.cloneNode(true);
+
+ 	let idChoice = update.insertCell(0);
+  	let description = update.insertCell(1);
+  	let dateCreate = update.insertCell(2);
+  	let dateComplete = update.insertCell(3); 
+	
+	console.log(choiceJson["idChoice"]);
+
+	idChoice.innerHTML = choiceJson["idChoice"];
+	description.innerHTML = choiceJson["description"];
+    dateCreate.innerHTML = choiceJson["dateCreate"];
+    dateComplete.innerHTML = choiceJson["dateComplete"];
+
+	adminTable.appendChild(update);
+	/*var newChoice = blankChoice.cloneNode(true);
 	newChoice.setAttribute("id","choice_" + i);
+	
+
 
 	var c_body = newChoice.querySelector("#c_body");
 
 	c_body.querySelector('#c_id').innerHTML = idChoice;	
+	c_body.querySelector('#c_description').innerHTML = description;	
 	c_body.querySelector('#c_dateCreate').innerHTML = dateCreate;
 	c_body.querySelector('#c_dateComplete').innerHTML = dateComplete;
 	newChoice.style.display = "block";
 	
-	choiceList.appendChild(newChoice);
+	choiceList.appendChild(newChoice);*/
   }
 }
 
 window.onload = function() {
-	document.getElementById( "choice_" ).style.display = "none";
+	//document.getElementById( "choice_" ).style.display = "none";
 	refreshChoiceList();
 }
