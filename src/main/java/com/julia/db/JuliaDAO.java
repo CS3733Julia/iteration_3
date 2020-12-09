@@ -609,26 +609,26 @@ public class JuliaDAO {
 	
 	// check if a choice is more than N days old
 	private boolean isMoreThanNDaysOld(int days, ResultSet resultSet) throws Exception {
-		System.out.println("Inside helper");
-		System.out.println("\nDescription:" + resultSet.getString("descriptionChoice"));
+		//System.out.println("Inside helper");
+		//System.out.println("\nDescription:" + resultSet.getString("descriptionChoice"));
 		String dateCreate = resultSet.getString("dateCreate");
-		System.out.println("Inside helper 1");
-		System.out.println(dateCreate);
+		//System.out.println("Inside helper 1");
+		//System.out.println(dateCreate);
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		System.out.println("Inside helper 2");
+		//System.out.println("Inside helper 2");
 		Date dateCreated = format.parse(dateCreate); 
-		System.out.println("Inside helper 3");
+		//System.out.println("Inside helper 3");
 		Date currentDate = new Date();
-		System.out.println("Inside helper 4");
+		//System.out.println("Inside helper 4");
 
 		
 		try {
-			System.out.println("inside try");
+			//System.out.println("inside try");
 			long diff = currentDate.getTime() - dateCreated.getTime();
-			System.out.println("The time difference is:" + diff);
+			//System.out.println("The time difference is:" + diff);
 			long diffDays = (diff / (1000 * 60 * 60 * 24)) % 365; 
-			System.out.println("The time difference is:" + diffDays);
-			if (diffDays > days) {
+			//System.out.println("The time difference is:" + diffDays);
+			if (diffDays >= days) {
 				return true;
 			}
 			

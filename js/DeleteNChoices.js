@@ -56,26 +56,27 @@ window.onload = function() {
 */
 
 function handleDeleteClick(e) {
-	console.log("got here")
+	//console.log("got here")
 	var days = {};
 	days["days"] = parseInt(document.getElementById("n_days").value);
 
-	console.log("Delete " + days["days"] + " days");
+	//console.log("Delete " + days["days"] + " days");
 	var js1 = JSON.stringify(days);
-	console.log(js1);
+	//console.log(js1);
 	var xhr1 = new XMLHttpRequest();
-	console.log("after printing js");
+	//console.log("after printing js");
 	xhr1.open("POST", deleteChoicesUrl, true);
-	console.log("after post");
+	xhr1.setRequestHeader('Content-Type', "application/json");
+	//console.log("after post");
 	
 	xhr1.send(js1);
-	console.log("after sending js");
+	//console.log("after sending js");
 
 	// process the results and update the html
 	// This will process results and update HTML as appropriate. 
   xhr1.onloadend = function () {
     if (xhr1.readyState == XMLHttpRequest.DONE) {
-	    console.log("XHR:" + xhr1.responseText);
+	    //console.log("XHR:" + xhr1.responseText);
         //processListResponse(xhr1.responseText);
 		location.reload();
     } else {
