@@ -272,6 +272,27 @@ public class JuliaDAO {
         }
     }
     
+    
+    public boolean checkChoiceComplete(String idChoice) throws Exception {
+        try {
+    	PreparedStatement psC = conn.prepareStatement("SELECT dateComplete FROM Choice WHERE idChoice=?;");
+        psC.setString(1,  idChoice);
+        ResultSet resultSetChoice = psC.executeQuery();
+        
+        while (resultSetChoice.next()) {
+        	if (resultSetChoice.getString("dateComplete") != null) {
+        		return true;
+        	}
+        }
+        
+        return false;
+        
+        }catch (Exception e) {
+        	e.printStackTrace();
+            throw new Exception("Failed to check Choice: " + e.getMessage());
+        }	
+    }
+    
     public boolean checkApproval(String alternativeUUID, String memberUUID) throws Exception {
         
         try {
