@@ -566,7 +566,6 @@ public class JuliaDAO {
         String description  = resultSet.getString("descriptionChoice");
         String dateCreate = resultSet.getString("dateCreate");
         String dateComplete = resultSet.getString("dateComplete");
-        String description = resultSet.getString("descriptionChoice");
         if (dateComplete == null) {
         	dateComplete = "Not Complete";
         }
@@ -620,7 +619,15 @@ public class JuliaDAO {
 			long diff = currentDate.getTime() - dateCreated.getTime();
 			long diffDays = (diff / (1000 * 60 * 60 * 24)) % 365; 
 			if (diffDays >= days) {
-    }
+				return true;
+			}
+		}catch (Exception e) {
+		    e.printStackTrace();
+		    throw new Exception("Failed in finding difference: " + e.getMessage());
+		}
+		return false;
+	}
+
 
     
 	public Choice selectAlternative(String idAlternative, String idChoice) throws Exception {

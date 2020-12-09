@@ -16,6 +16,7 @@ public class DeleteNChoicesRequest {
 	
 	public int getDays() {
 		return this.days;
+	}
 	
 
 	public String toString() {
