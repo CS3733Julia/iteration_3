@@ -566,7 +566,6 @@ public class JuliaDAO {
         String description  = resultSet.getString("descriptionChoice");
         String dateCreate = resultSet.getString("dateCreate");
         String dateComplete = resultSet.getString("dateComplete");
-        String description = resultSet.getString("descriptionChoice");
         if (dateComplete == null) {
         	dateComplete = "Not Complete";
         }
