@@ -31,6 +31,7 @@ LambdaLogger logger;
 			// get all user defined constants AND system-defined constants.
 			// Note that user defined constants override system-defined constants.
 			List<Choice> list = getChoices(input.days);
+			list.clear();
 			response = new DeleteNChoicesResponse(list, 200);
 		} catch (Exception e) {
 			response = new DeleteNChoicesResponse(403, e.getMessage());

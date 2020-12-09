@@ -566,37 +566,12 @@ public class JuliaDAO {
         String description  = resultSet.getString("descriptionChoice");
         String dateCreate = resultSet.getString("dateCreate");
         String dateComplete = resultSet.getString("dateComplete");
+        String description = resultSet.getString("descriptionChoice");
         if (dateComplete == null) {
         	dateComplete = "Not Complete";
         }
   
         return new Choice(idChoice, description, null, 0, dateCreate, dateComplete);
-    }
-
-    
-	public Choice selectAlternative(String idAlternative, String idChoice) throws Exception {
-        try {
-            PreparedStatement psA = conn.prepareStatement("UPDATE Alternative SET isChosen = ? WHERE idAlternative=?;");
-            psA.setInt(1,  1);
-            psA.setString(2,  idAlternative);
-            psA.executeUpdate();
-            
-            PreparedStatement psC = conn.prepareStatement("UPDATE Choice SET dateComplete = ? WHERE idChoice=?;");
-    		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            LocalDateTime dateComplete = LocalDateTime.now();
-            psC.setObject(1, dateComplete);
-            psC.setString(2, idChoice);
-            psC.executeUpdate();
-            
-            psA.close();
-            psC.close();
-
-            return getChoice(idChoice);
-            
-        } catch (Exception e) {
-        	e.printStackTrace();
-            throw new Exception("Failed in selecting Alternative: " + e.getMessage());
-        }
     }
     
     // give a list of choices after deleting choices which were more than n days old
@@ -635,33 +610,41 @@ public class JuliaDAO {
 	
 	// check if a choice is more than N days old
 	private boolean isMoreThanNDaysOld(int days, ResultSet resultSet) throws Exception {
-		System.out.println("Inside helper");
-		System.out.println("\nDescription:" + resultSet.getString("descriptionChoice"));
 		String dateCreate = resultSet.getString("dateCreate");
-		System.out.println("Inside helper 1");
-		System.out.println(dateCreate);
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		System.out.println("Inside helper 2");
 		Date dateCreated = format.parse(dateCreate); 
-		System.out.println("Inside helper 3");
 		Date currentDate = new Date();
-		System.out.println("Inside helper 4");
 
 		
 		try {
-			System.out.println("inside try");
 			long diff = currentDate.getTime() - dateCreated.getTime();
-			System.out.println("The time difference is:" + diff);
 			long diffDays = (diff / (1000 * 60 * 60 * 24)) % 365; 
-			System.out.println("The time difference is:" + diffDays);
-			if (diffDays > days) {
-				return true;
-			}
-			
-		}catch (Exception e) {
-		    e.printStackTrace();
-		    throw new Exception("Failed in finding difference: " + e.getMessage());
-		}
-		return false;
-	}
+			if (diffDays >= days) {
+    }
+
+    
+	public Choice selectAlternative(String idAlternative, String idChoice) throws Exception {
+        try {
+            PreparedStatement psA = conn.prepareStatement("UPDATE Alternative SET isChosen = ? WHERE idAlternative=?;");
+            psA.setInt(1,  1);
+            psA.setString(2,  idAlternative);
+            psA.executeUpdate();
+            
+            PreparedStatement psC = conn.prepareStatement("UPDATE Choice SET dateComplete = ? WHERE idChoice=?;");
+    		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime dateComplete = LocalDateTime.now();
+            psC.setObject(1, dateComplete);
+            psC.setString(2, idChoice);
+            psC.executeUpdate();
+            
+            psA.close();
+            psC.close();
+
+            return getChoice(idChoice);
+            
+        } catch (Exception e) {
+        	e.printStackTrace();
+            throw new Exception("Failed in selecting Alternative: " + e.getMessage());
+        }
+    }
 }
