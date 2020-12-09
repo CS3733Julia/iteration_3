@@ -16,5 +16,5 @@ var addFeedbackUrl = base_url + "choice/addFeedback"
 var completeChoiceUrl = base_url + "choice/completeChoice"
 
 // ADMIN
-var deleteChoicesUrl = base_url + "admin";				// POST
-var getAllChoiceUrl = base_url + "admin";				// GET
+var deleteChoicesUrl = base_url + "admin/deleteChoices";				// POST
+var getAllChoiceUrl = base_url + "admin/getAllChoices";				// GET

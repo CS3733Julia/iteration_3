@@ -1,6 +1,8 @@
 package com.julia.db;
 
 import java.sql.*;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -421,6 +423,27 @@ public class JuliaDAO {
           int numAlternativesAffected = psA.executeUpdate();
           psA.close();
           
+          PreparedStatement psF = conn.prepareStatement("DELETE FROM Feedback WHERE idChoice = ?;");
+          psF.setString(1, idChoice);
+          int numFeedbackAffected = psF.executeUpdate();
+          psF.close();
+          
+          PreparedStatement psM = conn.prepareStatement("DELETE FROM Member WHERE idChoice = ?;");
+          psM.setString(1, idChoice);
+          int numMembersAffected = psM.executeUpdate();
+          psM.close();
+          
+          PreparedStatement psApp = conn.prepareStatement("DELETE FROM Approved WHERE idChoice = ?;");
+          psApp.setString(1, idChoice);
+          int numApprovalsAffected = psApp.executeUpdate();
+          psApp.close();
+          
+          PreparedStatement psDApp = conn.prepareStatement("DELETE FROM Disapproved WHERE idChoice = ?;");
+          psDApp.setString(1, idChoice);
+          int numDisApprovalsAffected = psDApp.executeUpdate();
+          psDApp.close();
+          
+          System.out.println("choices affected: " + numChoicesAffected + " alternatives affected: " + numAlternativesAffected + " Feedbacks affected: " + numFeedbackAffected + " Members affected: " + numMembersAffected + " Approvals affected: " + numApprovalsAffected + " DisApprovals affected: " + numDisApprovalsAffected);
           return (numChoicesAffected > 1 && numAlternativesAffected > 2 && deleteMember(idChoice));
 
       } catch (Exception e) {
@@ -542,10 +565,77 @@ public class JuliaDAO {
         String idChoice  = resultSet.getString("idChoice");
         String dateCreate = resultSet.getString("dateCreate");
         String dateComplete = resultSet.getString("dateComplete");
+        String description = resultSet.getString("descriptionChoice");
         if (dateComplete == null) {
         	dateComplete = "Not Complete";
         }
   
-        return new Choice(idChoice, null, null, 0, dateCreate, dateComplete);
+        return new Choice(idChoice, description, null, 0, dateCreate, dateComplete);
     }
+    
+    // give a list of choices after deleting choices which were more than n days old
+	public List<Choice> deleteChoices(int days) throws Exception {
+	    System.out.println("here");
+    	boolean deleted = false;
+    	List<Choice> updatedChoices = new ArrayList<>();
+
+        try {
+        	System.out.println("Inside try");
+            Statement psC = conn.createStatement();
+            String query = "SELECT * FROM Choice;";
+            ResultSet resultSet = psC.executeQuery(query);
+
+            while (resultSet.next()) {
+            	boolean old = isMoreThanNDaysOld(days, resultSet);
+            	String idChoice  = resultSet.getString("idChoice");
+            	if (old) {
+            		deleted = deleteChoice(idChoice);
+            		System.out.println("The choice was deleted: " + deleted);
+            		System.out.println("Deleted Choice: " + idChoice);
+            	} else {
+            		Choice c = generateChoice(resultSet);
+            		updatedChoices.add(c);
+            	}
+            }
+            resultSet.close();
+            psC.close();
+            return updatedChoices;
+        } 
+        
+        catch (Exception e) {
+          throw new Exception("Failed in getting choices: " + e.getMessage());
+        }        
+    }
+	
+	// check if a choice is more than N days old
+	private boolean isMoreThanNDaysOld(int days, ResultSet resultSet) throws Exception {
+		System.out.println("Inside helper");
+		System.out.println("\nDescription:" + resultSet.getString("descriptionChoice"));
+		String dateCreate = resultSet.getString("dateCreate");
+		System.out.println("Inside helper 1");
+		System.out.println(dateCreate);
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		System.out.println("Inside helper 2");
+		Date dateCreated = format.parse(dateCreate); 
+		System.out.println("Inside helper 3");
+		Date currentDate = new Date();
+		System.out.println("Inside helper 4");
+
+		
+		try {
+			System.out.println("inside try");
+			long diff = currentDate.getTime() - dateCreated.getTime();
+			System.out.println("The time difference is:" + diff);
+			long diffDays = (diff / (1000 * 60 * 60 * 24)) % 365; 
+			System.out.println("The time difference is:" + diffDays);
+			if (diffDays > days) {
+				return true;
+			}
+			
+		}catch (Exception e) {
+		    e.printStackTrace();
+		    throw new Exception("Failed in finding difference: " + e.getMessage());
+		}
+		return false;
+	}
 }
