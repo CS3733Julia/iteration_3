@@ -13,5 +13,5 @@ var completeChoiceUrl = base_url + "choice";			// POST
 var createChoiceUrl = base_url + "choice/createChoice";	// POST
 
 // ADMIN
-var deleteChoicesUrl = base_url + "admin";				// POST
+var deleteChoicesUrl = base_url + "admin/deleteChoices";				// POST
 var getAllChoiceUrl = base_url + "admin/getAllChoices";				// GET
