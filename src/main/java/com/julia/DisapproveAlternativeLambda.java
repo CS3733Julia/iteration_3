@@ -17,6 +17,12 @@ public class DisapproveAlternativeLambda implements RequestHandler<DisapproveReq
 		if (logger != null) { logger.log("in DisapproveAlternative"); }
 		
 		JuliaDAO dao = new JuliaDAO();
+		
+		Choice choice = dao.getChoicebyAlternative(idAlternative);
+		if(dao.checkChoiceComplete(choice.idChoice)) {
+			throw new Exception("Choice is complete"); 
+		}
+		
 		if (dao.checkDisapproval(idAlternative, idMember)) {
 			dao.deleteDisapproval(idAlternative, idMember);
 		}
@@ -28,7 +34,7 @@ public class DisapproveAlternativeLambda implements RequestHandler<DisapproveReq
 			dao.createDisapproval(idAlternative, idMember);
 		}
 		
-		Choice choice = dao.getChoicebyAlternative(idAlternative);
+		choice = dao.getChoicebyAlternative(idAlternative);
 		return choice;
 	}
 
@@ -44,7 +50,7 @@ public class DisapproveAlternativeLambda implements RequestHandler<DisapproveReq
 			logger.log(response.toString());
 			
 		} catch (Exception e) {
-			response = new DisapproveResponse("Unable to disapprove alternative", 400);
+			response = new DisapproveResponse(e.getMessage(), 400);
 		}
 
 		return response;

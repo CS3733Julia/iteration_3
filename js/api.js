@@ -11,7 +11,10 @@ var disapproveAlternativeUrl = base_url + "choice/disapproveAlternative";		// PO
 var approveAlternativeUrl = base_url + "choice/approveAlternative";		// POST
 var completeChoiceUrl = base_url + "choice";			// POST
 var createChoiceUrl = base_url + "choice/createChoice";	// POST
+var createChoiceUrl = base_url + "choice/createChoice";	// POST
+var addFeedbackUrl = base_url + "choice/addFeedback"
+var completeChoiceUrl = base_url + "choice/completeChoice"
 
 // ADMIN
-var deleteChoicesUrl = base_url + "admin";				// POST
+var deleteChoicesUrl = base_url + "admin/deleteChoices";				// POST
 var getAllChoiceUrl = base_url + "admin/getAllChoices";				// GET
