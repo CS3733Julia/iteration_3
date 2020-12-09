@@ -11,8 +11,6 @@ function processCreateResponse(result) {
 }
 
 function handleCreateClick(e) {
-	
-	// {name:¨Carlos, year:¨Junior}
 
 	const description = document.querySelector( '#choiceDescription' ),
 				maxParticipants = document.querySelector( '#numParticipants' ),
