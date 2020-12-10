@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import com.julia.http.CreateChoiceRequest;
 import com.julia.http.CreateChoiceResponse;
 import com.julia.http.ParticipateInChoiceRequest;
+import com.julia.http.ParticipateInChoiceResponse;
 import com.julia.http.completeChoiceRequest;
 import com.julia.http.completeChoiceResponse;
 import com.julia.model.Alternative;
@@ -36,12 +37,12 @@ public class completeChoiceLambdaTest extends LambdaTest{
     
 	@Test
     public void testShouldBeOk() {
-    	String idAlternative = "0763dfef-d1ff-4b62-8a1c-a2be1e7d375f";
+		String idChoice = createChoice();
+		ParticipateInChoiceResponse pr = participateInChoice(idChoice);
 		
-    	completeChoiceRequest cc = new completeChoiceRequest(idAlternative);
+    	completeChoiceRequest cc = new completeChoiceRequest(pr.choice.alternatives.get(0).idAlternative);
 		
         String SAMPLE_INPUT_STRING = new Gson().toJson(cc);  
-        String idChoice = "";
         try {
         	testSuccessInput(SAMPLE_INPUT_STRING);
         } catch (IOException ioe) {

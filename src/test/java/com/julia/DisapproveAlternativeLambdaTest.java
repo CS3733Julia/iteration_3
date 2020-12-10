@@ -11,6 +11,7 @@ import com.julia.http.ApproveRequest;
 import com.julia.http.ApproveResponse;
 import com.julia.http.DisapproveRequest;
 import com.julia.http.DisapproveResponse;
+import com.julia.http.ParticipateInChoiceResponse;
 
 public class DisapproveAlternativeLambdaTest extends LambdaTest {
     String testSuccessInput(String incoming) throws IOException {
@@ -32,13 +33,14 @@ public class DisapproveAlternativeLambdaTest extends LambdaTest {
 
 	@Test
     public void testShouldBeOk() {
-    	String idAlternative = "0336a1f5-5d8d-4c22-a276-fca06f556d07";
-    	String idMember = "3225b467-f556-4737-af41-9df2f4967d52";
+
 		
-		DisapproveRequest ar = new DisapproveRequest(idAlternative, idMember);
+		String idChoice = createChoice();
+		ParticipateInChoiceResponse pr = participateInChoice(idChoice);
+		
+		DisapproveRequest ar = new DisapproveRequest(pr.choice.alternatives.get(0).idAlternative, pr.idMember);
 		
         String SAMPLE_INPUT_STRING = new Gson().toJson(ar);  
-        String idChoice = "";
         try {
         	idChoice = testSuccessInput(SAMPLE_INPUT_STRING);
         } catch (IOException ioe) {

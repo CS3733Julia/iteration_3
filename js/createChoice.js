@@ -5,7 +5,7 @@
 // test commit
 
 function processCreateResponse(result) {
-	console.log("result: " + result);
+	//console.log("result: " + result);
 	result = JSON.parse(result);
 	document.getElementById("choice_id").innerHTML = result["idChoice"];
 }
@@ -22,13 +22,15 @@ function handleCreateClick(e) {
 	var altFields = [				
 		alternative_1, alternative_2, alternative_3, alternative_4, alternative_5
 	]
-	console.log(altFields)
+	//console.log(altFields)
 	var altArray = []
 	for (var i = 0; i < 5; i++) {
 		if (!(altFields[i] === "")) {
 			altArray.push(altFields[i])
 		}
 	}
+
+
 	const	json = { 'description':description.value,
 								 'alternatives': altArray,
 								 'maxParticipants':maxParticipants.value,
@@ -43,7 +45,7 @@ function handleCreateClick(e) {
 				document.querySelector( '#a4_description' ).value = ""   
 				document.querySelector( '#a5_description' ).value = ""   
 
-	console.log(body);
+	//console.log(body);
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", createChoiceUrl, true);
 
@@ -51,12 +53,12 @@ function handleCreateClick(e) {
 
 	// process the results and update the html
 	xhr.onloadend = function() {
-		console.log(xhr);
+		//console.log(xhr);
 		if (xhr.readyState == XMLHttpRequest.DONE) {
 			if (xhr.status == 200) {
 				processCreateResponse(xhr.responseText);
 			} else {
-				console.log("actual:" + xhr.responseText)
+				//console.log("actual:" + xhr.responseText)
 				var js = JSON.parse(xhr.responseText);
 				var err = js["response"];
 				alert(err);
