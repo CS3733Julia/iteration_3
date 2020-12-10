@@ -98,12 +98,11 @@ public class AddFeedbackLambdaTest extends LambdaTest {
     	String idAlternative = resp.choice.alternatives.get(0).idAlternative;
     	String idMember = resp.idMember;
     	String description = "this is feedback for an alternative";
-		
+    	completeChoice(idAlternative);
 		AddFeedbackRequest af = new AddFeedbackRequest(idChoice, idAlternative, idMember, description);
 		
         String SAMPLE_INPUT_STRING = new Gson().toJson(af);  
         try {
-        	idChoice = testSuccessInput(SAMPLE_INPUT_STRING);
         	testFailInput(SAMPLE_INPUT_STRING, 400);
         } catch (IOException ioe) {
         	Assert.fail("Invalid:" + ioe.getMessage());

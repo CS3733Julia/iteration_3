@@ -2,7 +2,7 @@
  * Select Alternative Preference
  */
 function processPreference(result, alt_id) {
-	console.log(result)
+	// console.log(result)
 	if(result != "Choice is complete") {
 		alt_array = result["alternatives"]
 		for (var i = 0; i < alt_array.length; i++) {
@@ -28,27 +28,27 @@ function processPreference(result, alt_id) {
 }
 
 function handleApprovalClick(e, a_id, a_key) {
-	console.log("Approving")
+	// console.log("Approving")
     var approval = {};
     
 	approval["idAlternative"] = a_id;
 	approval["idMember"] =document.getElementById("member_id").innerHTML;
 
-    console.log(approval)
+    // console.log(approval)
 
 	var js1 = JSON.stringify(approval);
-	console.log(js1);
+	// console.log(js1);
 	var xhr1 = new XMLHttpRequest();
-	console.log("after printing js");
+	// console.log("after printing js");
 	xhr1.open("POST", approveAlternativeUrl, true);
-	console.log("after post");
+	// console.log("after post");
 	
 	xhr1.send(js1);
-	console.log("after sending js");
+	// console.log("after sending js");
 
 	// process the results and update the html
 	xhr1.onloadend = function() {
-		console.log(xhr1);
+		// console.log(xhr1);
 		/*console.log(xhr1.request);*/
 		if (xhr1.readyState == XMLHttpRequest.DONE) {
 			if (xhr1.status == 200) {
@@ -60,7 +60,7 @@ function handleApprovalClick(e, a_id, a_key) {
 					processPreference(js["choice"], a_id);
 				}
 			} else {
-				console.log("actual:" + xhr1.responseText)
+				// console.log("actual:" + xhr1.responseText)
 				var js = JSON.parse(xhr1.responseText);
 				var err = js["response"];
 				alert(err);
@@ -72,7 +72,7 @@ function handleApprovalClick(e, a_id, a_key) {
 }
 
 function handleDisapprovalClick(e, a_id, a_key) {
-	console.log("Disapproving")
+	// console.log("Disapproving")
     var disapproval = {};
     
 	disapproval["idAlternative"] = a_id;
