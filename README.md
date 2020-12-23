@@ -1,5 +1,5 @@
 # TEAM JULIA
-This project was created by Nathan Stallings, Elizabeth Kirschner, Pradnya Mahurkar, and Carlos Valasquez.
+This project was created by Nathan Stallings, Elizabeth Kirschner, Pradnya Mahurkar, and Carlos Velasquez.
 
 This was a term long project completed in B2020 in the Worcester Polytechnic Institute course Software Engineering.
 
